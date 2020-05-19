@@ -8,7 +8,7 @@ INSERT INTO user_info(id, name, email, password) VALUES (2, 'User', 'user@jwt.co
 
 INSERT INTO permission VALUES (1, 'LST_ITEM');
 INSERT INTO permission VALUES (2, 'ADD_ITEM');
-INSERT INTO permission VALUES (3, 'REM_ITEM');
+INSERT INTO permission VALUES (3, 'DEL_ITEM');
 
 -- admin
 INSERT INTO user_permission VALUES (1, 1);

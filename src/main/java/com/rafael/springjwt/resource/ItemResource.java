@@ -10,10 +10,13 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rafael.springjwt.event.ResourceCreateEvent;
@@ -37,10 +40,24 @@ public class ItemResource {
 	}
 	
 	@PostMapping
+	@PreAuthorize("hasAuthority('ADD_ITEM') and #oauth2.hasScope('write')")
 	public ResponseEntity<Item> add(@Valid @RequestBody Item item, HttpServletResponse response) {
 		Item savedItem = itemRepository.save(item);
 		publisher.publishEvent(new ResourceCreateEvent(this, response, savedItem.getId()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
+	}
+	
+	@GetMapping("/{id}")
+	@PreAuthorize("hasAuthority('LST_ITEM') and #oauth2.hasScope('read')")
+	public Item findById(@PathVariable Long id) {
+		return itemRepository.findById(id).get();
+	}
+	
+	@DeleteMapping("/{id}")
+	@PreAuthorize("hasAuthority('DEL_ITEM') and #oauth2.hasScope('delete')")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable Long id) {
+		itemRepository.deleteById(id);
 	}
 	
 }
