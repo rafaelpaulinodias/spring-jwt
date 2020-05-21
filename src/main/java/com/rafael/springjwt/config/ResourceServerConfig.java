@@ -15,10 +15,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.anyRequest().authenticated()
+					.antMatchers("/api/*").authenticated()
+					.anyRequest().anonymous()
 				.and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-			.csrf().disable();
+					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+					.csrf().disable();
 	}
 	
 	@Override

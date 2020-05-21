@@ -23,8 +23,12 @@ import com.rafael.springjwt.event.ResourceCreateEvent;
 import com.rafael.springjwt.model.Item;
 import com.rafael.springjwt.repository.ItemRepository;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
-@RequestMapping("/items")
+@RequestMapping("/api/items")
+@Api("REST API Items")
 public class ItemResource {
 	
 	@Autowired
@@ -34,12 +38,14 @@ public class ItemResource {
 	private ApplicationEventPublisher publisher;
 	
 	@GetMapping
+	@ApiOperation("Returns a list of all ITEMS")
 	@PreAuthorize("hasAuthority('LST_ITEM') and #oauth2.hasScope('read')")
 	public List<Item> list() {
 		return itemRepository.findAll();
 	}
 	
 	@PostMapping
+	@ApiOperation("ADD an ITEM")
 	@PreAuthorize("hasAuthority('ADD_ITEM') and #oauth2.hasScope('write')")
 	public ResponseEntity<Item> add(@Valid @RequestBody Item item, HttpServletResponse response) {
 		Item savedItem = itemRepository.save(item);
@@ -48,12 +54,14 @@ public class ItemResource {
 	}
 	
 	@GetMapping("/{id}")
+	@ApiOperation("Find one ITEM by ID")
 	@PreAuthorize("hasAuthority('LST_ITEM') and #oauth2.hasScope('read')")
 	public Item findById(@PathVariable Long id) {
 		return itemRepository.findById(id).get();
 	}
 	
 	@DeleteMapping("/{id}")
+	@ApiOperation("Delete a ITEM by ID")
 	@PreAuthorize("hasAuthority('DEL_ITEM') and #oauth2.hasScope('delete')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {

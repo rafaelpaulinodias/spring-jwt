@@ -12,14 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rafael.springjwt.config.property.ApiProperty;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
-@RequestMapping("/tokens")
+@RequestMapping("/api/tokens")
+@Api("Token API")
 public class TokenResource {
 	
 	@Autowired
 	private ApiProperty property;
 	
 	@DeleteMapping
+	@ApiOperation("Removes the refresh token from the cookie")
 	public void revoke(HttpServletRequest request, HttpServletResponse response) {
 		Cookie cookie = new Cookie("refreshToken", null);
 		cookie.setHttpOnly(true);
